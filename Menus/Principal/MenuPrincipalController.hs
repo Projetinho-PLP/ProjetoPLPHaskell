@@ -4,6 +4,7 @@ import System.IO ( hFlush, stdout )
 import Data.Char (toUpper)
 import Control.Concurrent ( threadDelay )
 import Menus.Compras.MenuCompraController ( startMenuCompra )
+import Menus.Configuracoes.MenuConfiguracoesController ( startMenuConfiguracao )
 import Utilitarios.Matriz.MatrizServices ( printMatrix )
 
 startMenu :: IO ()
@@ -19,6 +20,7 @@ startMenu = do
 optionsStartMenu :: String -> IO ()
 optionsStartMenu userChoice
     | userChoice == "C" = startMenuCompra 
+    | userChoice == "A" = startMenuConfiguracao
     | otherwise = do
         putStrLn "\nOpção Inválida!"
         threadDelay 700000

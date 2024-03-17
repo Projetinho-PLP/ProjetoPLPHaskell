@@ -1,4 +1,4 @@
-module Filme.FilmeCRUD (
+module Modelos.FilmeModel (
     Filme(..),
     criarFilme,
     lerFilme,
@@ -7,15 +7,20 @@ module Filme.FilmeCRUD (
 ) where
 
 
-data Filme = Filme { diretor :: String,
-                     titulo :: String,
-                     genero :: String
-                     } deriving (Show, Eq)
+data Filme = Filme { ident :: Int, 
+                    diretor :: String,
+                    titulo :: String,
+                    genero :: String
+                    } deriving (Show, Eq)
 
-type BancoDeDados = [Filme]
-
-criarFilme :: BancoDeDados -> Filme -> BancoDeDados
-criarFilme banco filme = filme : banco
+criarFilme :: Int -> String -> String -> String -> Filme
+criarFilme id_ titulo diretor genero =
+    Filme {
+        ident = id_,
+        titulo = titulo,
+        diretor = diretor,
+        genero = genero
+    }
 
 lerFilme :: BancoDeDados -> String -> Maybe Filme
 lerFilme [] _ = Nothing

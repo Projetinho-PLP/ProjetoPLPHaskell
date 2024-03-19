@@ -1,6 +1,6 @@
 module Menus.Compras.MenuCompraController where
 import System.IO ( hFlush, stdout )
-import Utilitarios.Matriz.MatrizServices (printMatrix)
+import Servicos.Matriz.MatrizServices (printMatrix)
 
 
 startMenuCompra :: IO()

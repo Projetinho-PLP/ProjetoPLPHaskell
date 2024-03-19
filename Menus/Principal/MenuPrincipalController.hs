@@ -5,7 +5,7 @@ import Data.Char (toUpper)
 import Control.Concurrent ( threadDelay )
 import Menus.Compras.MenuCompraController ( startMenuCompra )
 import Menus.Configuracoes.MenuConfiguracoesController ( startMenuConfiguracao )
-import Utilitarios.Matriz.MatrizServices ( printMatrix )
+import Servicos.Matriz.MatrizServices ( printMatrix )
 
 startMenu :: IO ()
 startMenu = do

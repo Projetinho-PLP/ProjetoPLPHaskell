@@ -6,11 +6,11 @@
 
 module Menus.Configuracoes.MenuConfiguracoesController where
 import System.IO ( hFlush, stdout )
-import Utilitarios.Matriz.MatrizServices ( printMatrix )
+import Servicos.Matriz.MatrizServices ( printMatrix )
 import Data.Char (toUpper)
 import Control.Concurrent ( threadDelay )
 import Modelos.Administrador
-import Utilitarios.MenuConfiguracoes.Administrador.ManipulaAdministrador ( adicionarAdministradorJSON )
+import Servicos.MenuConfiguracoes.Administrador.ManipulaAdministrador ( adicionarAdministradorJSON )
 
 startMenuConfiguracao :: IO()
 startMenuConfiguracao = do

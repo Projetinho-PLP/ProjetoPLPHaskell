@@ -15,6 +15,7 @@ import Data.String (String)
 import GHC.Arr (listArray)
 import Control.Concurrent (addMVarFinalizer)
 import Data.Foldable (Foldable(length))
+import Data.Bool (Bool)
 
 instance FromJSON Administrador
 instance ToJSON Administrador
@@ -43,12 +44,29 @@ mudaId:: Int -> Administrador -> Administrador
 mudaId newIdent administrador = administrador { ident = newIdent }
 
 
+
+validarAdministrador :: Administrador -> [Administrador] -> Bool
+validarAdministrador _ [] = False
+validarAdministrador admin (x:xs) 
+    | (login x) == (login admin) && (senha x) == (senha admin) = True
+    | otherwise = validarAdministrador admin xs
+
+
+-- Funções que se comunicam com controller
+
+
 adicionarAdministradorJSON :: Administrador -> IO()
 adicionarAdministradorJSON administrador = do
-    let conteudo = getAdministradorJSON
-    listaAdmins <- retornaLista conteudo administrador
+  let conteudo = getAdministradorJSON
+  listaAdmins <- retornaLista conteudo administrador
     
-    B.writeFile constanteTempPATH $ encode listaAdmins
-    removeFile constantePATH
-    renameFile constanteTempPATH constantePATH
-    
+  B.writeFile constanteTempPATH $ encode listaAdmins
+  removeFile constantePATH
+  renameFile constanteTempPATH constantePATH
+
+  
+validarAdministradorJSON :: Administrador -> IO Bool
+validarAdministradorJSON administrador = do
+  conteudo <- getAdministradorJSON
+  let validacao = validarAdministrador administrador conteudo
+  return validacao

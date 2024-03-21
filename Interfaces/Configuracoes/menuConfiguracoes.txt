@@ -13,7 +13,7 @@
 │                                                                                                  │
 │                                                                                                  │
 │                                LOGIN ► L                                                         │
-│                                CADASTRAR ► A                                                     │
+│                                                                                                  │
 │                                                                                                  │
 │                                                                                                  │
 │                                                                                                  │

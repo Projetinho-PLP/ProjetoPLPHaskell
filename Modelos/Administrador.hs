@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric #-}
 module Modelos.Administrador where
 
 import GHC.Generics ( Generic )

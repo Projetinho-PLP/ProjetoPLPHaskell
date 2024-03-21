@@ -10,7 +10,8 @@ import Servicos.Matriz.MatrizServices ( printMatrix )
 import Data.Char (toUpper)
 import Control.Concurrent ( threadDelay )
 import Modelos.Administrador
-import Servicos.MenuConfiguracoes.Administrador.ManipulaAdministrador ( adicionarAdministradorJSON )
+import Servicos.MenuConfiguracoes.Administrador.ManipulaAdministrador ( adicionarAdministradorJSON, validarAdministradorJSON  )
+import Menus.Configuracoes.MenuAdministradorController ( startMenuAdmin )
 
 startMenuConfiguracao :: IO()
 startMenuConfiguracao = do
@@ -24,7 +25,6 @@ startMenuConfiguracao = do
 escolhaMenu :: String -> IO()
 escolhaMenu userChoice
     | userChoice == "L" = loginAdministrador
-    | userChoice == "A" = adicionarAdministrador
     | otherwise = do
         putStrLn "\nOpção inválida!"
         threadDelay 700000
@@ -33,12 +33,6 @@ escolhaMenu userChoice
 
 loginAdministrador :: IO()
 loginAdministrador = do
-    print "ai pa"
-    
-    
-
-adicionarAdministrador :: IO()
-adicionarAdministrador = do
     printMatrix "./Interfaces/Configuracoes/menuConfiguracoesLogin.txt"
     putStr "Digite seu user: "
     hFlush stdout
@@ -47,6 +41,10 @@ adicionarAdministrador = do
     hFlush stdout
     senha <- getLine
     let administrador = Administrador 0 user senha
-   -- putStrLn $ show administrador
-    adicionarAdministradorJSON administrador
-    startMenuConfiguracao
+    validacao <- validarAdministradorJSON administrador
+    if (validacao == True)
+        then startMenuAdmin
+        else loginAdministrador
+    
+    
+

@@ -8,6 +8,7 @@ import GHC.Generics ( Generic )
 
 data Filme = Filme {
     ident:: Int,
-    name:: String,
-    duracao:: String
+    titulo:: String,
+    duracao:: String,
+    genero:: String
 } deriving (Show, Generic)

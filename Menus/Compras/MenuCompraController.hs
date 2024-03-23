@@ -1,7 +1,7 @@
 module Menus.Compras.MenuCompraController where
 import System.IO ( hFlush, stdout )
 import Servicos.Matriz.MatrizServices (printMatrix, writeMatrixValue)
-import Menus.Compras.FilmesController (loadMovies)
+import Servicos.Filmes.FilmesController (loadMovies)
 
 interfaceMenuCompra :: String
 interfaceMenuCompra = "./Interfaces/Compras/MenuCompras.txt"

@@ -6,33 +6,19 @@
 
 module Menus.Configuracoes.MenuConfiguracoesController where
 import System.IO ( hFlush, stdout )
-import Servicos.Matriz.MatrizServices ( printMatrix )
+import Servicos.Matriz.MatrizServices ( printMatrix, writeMatrixValue )
 import Data.Char (toUpper)
 import Control.Concurrent ( threadDelay )
 import Modelos.Administrador
 import Servicos.MenuConfiguracoes.Administrador.ManipulaAdministrador ( adicionarAdministradorJSON, validarAdministradorJSON  )
 import Menus.Configuracoes.MenuAdministradorController ( startMenuAdmin )
+import Data.String (String)
+
+interfaceLogin :: String
+interfaceLogin = "./Interfaces/Configuracoes/menuConfiguracoesLogin.txt"
 
 startMenuConfiguracao :: IO()
 startMenuConfiguracao = do
-    printMatrix "./Interfaces/Configuracoes/menuConfiguracoes.txt"
-    putStr "Digite uma opção: "
-    hFlush stdout
-    userChoice <- getLine
-    let userChoiceUpper = map toUpper userChoice
-    escolhaMenu userChoiceUpper
-
-escolhaMenu :: String -> IO()
-escolhaMenu userChoice
-    | userChoice == "L" = loginAdministrador
-    | otherwise = do
-        putStrLn "\nOpção inválida!"
-        threadDelay 700000
-        startMenuConfiguracao
-
-
-loginAdministrador :: IO()
-loginAdministrador = do
     printMatrix "./Interfaces/Configuracoes/menuConfiguracoesLogin.txt"
     putStr "Digite seu user: "
     hFlush stdout
@@ -44,7 +30,19 @@ loginAdministrador = do
     validacao <- validarAdministradorJSON administrador
     if (validacao == True)
         then startMenuAdmin
-        else loginAdministrador
-    
-    
+        else loginInvalido
 
+loginInvalido :: IO()
+loginInvalido = do
+    printMatrix "./Interfaces/Configuracoes/menuConfiguracoesLoginInvalido.txt"
+    putStr "Digite seu user: "
+    hFlush stdout
+    user <- getLine
+    putStr "Digite sua senha: "
+    hFlush stdout
+    senha <- getLine
+    let administrador = Administrador 0 user senha
+    validacao <- validarAdministradorJSON administrador
+    if (validacao == True)
+        then startMenuAdmin
+        else loginInvalido

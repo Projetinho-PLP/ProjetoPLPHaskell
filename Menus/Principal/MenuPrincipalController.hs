@@ -6,6 +6,7 @@ import Control.Concurrent ( threadDelay )
 import Menus.Compras.MenuCompraController ( startMenuCompra )
 import Menus.Configuracoes.MenuConfiguracoesController ( startMenuConfiguracao )
 import Servicos.Matriz.MatrizServices ( printMatrix )
+import Menus.Bomboniere.MenuBomboniereController (startMenuBomboniere)
 
 startMenu :: IO ()
 startMenu = do
@@ -19,8 +20,9 @@ startMenu = do
 --A partir da letra selecionada, chama o controller especifico de algum menu
 optionsStartMenu :: String -> IO ()
 optionsStartMenu userChoice
-    | userChoice == "C" = startMenuCompra 
+    | userChoice == "I" = startMenuCompra 
     | userChoice == "A" = startMenuConfiguracao
+    | userChoice == "B" = startMenuBomboniere
     | otherwise = do
         putStrLn "\nOpção Inválida!"
         threadDelay 700000

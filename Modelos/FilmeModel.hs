@@ -6,7 +6,6 @@ module Modelos.FilmeModel (
     deletarFilme
 ) where
 
-
 data Filme = Filme { ident :: Int, 
                     diretor :: String,
                     titulo :: String,

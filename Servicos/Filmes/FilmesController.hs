@@ -12,8 +12,8 @@ import Data.Maybe
 import Data.Bool (Bool)
 import Data.Int (Int)
 
-instance FromJSON Filme
-instance ToJSON Filme
+--instance FromJSON Filme
+--instance ToJSON Filme
 
 
 --- Constante Utilizadas

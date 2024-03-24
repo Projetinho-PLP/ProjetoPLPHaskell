@@ -5,6 +5,7 @@
 module Modelos.Filme where
 
 import GHC.Generics ( Generic )
+import Data.Aeson ( FromJSON, ToJSON )
 
 data Filme = Filme {
     ident:: Int,
@@ -12,3 +13,6 @@ data Filme = Filme {
     duracao:: String,
     genero:: String
 } deriving (Show, Generic)
+
+instance FromJSON Filme
+instance ToJSON Filme

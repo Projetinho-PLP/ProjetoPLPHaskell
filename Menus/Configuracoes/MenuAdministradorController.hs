@@ -12,7 +12,7 @@ import Modelos.Administrador
 import Modelos.Sessao
 import Modelos.Filme (Filme(duracao, Filme))
 import Servicos.Filmes.FilmesController (adicionarFilmeJSON,getFilmeByID,contemFilme,getAllFilmesJSON)
-import Servicos.Sessao.SessaoServico (adicionaSessao)
+import Servicos.Sessao.SessaoServico (adicionaSessaoJSON)
 import Modelos.Sessao (Sessao(horario, capacidade))
 
 
@@ -69,6 +69,7 @@ adicionarFilmes = do
 
 adicionarSessao :: IO()
 adicionarSessao = do
+    printMatrix "./Interfaces/Configuracoes/ManuCadastroSessao.txt"
     putStr "Digite o Identificador do filme: "
     hFlush stdout
     idFilme <- readLn:: IO Int
@@ -86,8 +87,8 @@ adicionarSessao = do
             hFlush stdout
             idSala <- readLn::IO(Int)
             let sessao = Sessao 0 filme horario capacidade idSala
-            adicionaSessao sessao
+            adicionaSessaoJSON sessao
         else do
             putStrLn "Filme não registrado"
-            threadDelay 1500000
+            threadDelay 1200000
             

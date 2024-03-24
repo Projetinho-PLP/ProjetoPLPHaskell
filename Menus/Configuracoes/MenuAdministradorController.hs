@@ -8,7 +8,7 @@ import Data.Char (toUpper)
 
 import Modelos.Administrador
 import Modelos.Filme (Filme(duracao, Filme))
-import Servicos.Filmes.FilmesController (adicionarFilmeJSON)
+import Servicos.Filmes.FilmesController (adicionarFilmeJSON, checaNumeroMaximoDeFilmesAtingido)
 
 
 
@@ -48,15 +48,22 @@ adicionarAdministrador = do
 -- Modifique como quiser essa função
 adicionarFilmes :: IO()
 adicionarFilmes = do
-    printMatrix "./Interfaces/Configuracoes/MenuCadastroDeFilmes.txt"
-    putStr "Digite o título do filmes: "
-    hFlush stdout
-    titulo <- getLine
-    putStr "Digite a duração do filme: "
-    hFlush stdout
-    duracao <- getLine
-    putStr "Digite o genero do filme:"
-    genero <- getLine
-    let filme = Filme 0 titulo duracao genero
-    adicionarFilmeJSON filme
-    startMenuAdmin
+    numeroDeFilmes <- checaNumeroMaximoDeFilmesAtingido
+    if numeroDeFilmes 
+        then do
+            putStr "Número maximo de filmes atingido"
+            threadDelay 3000000
+            startMenuAdmin
+    else do 
+        printMatrix "./Interfaces/Configuracoes/MenuCadastroDeFilmes.txt"
+        putStr "Digite o título do filmes: "
+        hFlush stdout
+        titulo <- getLine
+        putStr "Digite a duração do filme: "
+        hFlush stdout
+        duracao <- getLine
+        putStr "Digite o genero do filme:"
+        genero <- getLine
+        let filme = Filme 0 titulo duracao genero
+        adicionarFilmeJSON filme
+        startMenuAdmin

@@ -25,6 +25,9 @@ constanteTempPATH = "./BancoDeDados/TempFilme.json"
 
 interfaceMenuCompra :: String
 interfaceMenuCompra = "./Interfaces/Compras/MenuCompras.txt"
+
+interfaceMenuCompraBase :: String
+interfaceMenuCompraBase = "./Interfaces/Compras/MenuComprasBase.txt"
 ------------------------------------------------------
 
 getAllFilmesJSON :: IO [Filme]
@@ -44,40 +47,54 @@ mudaId:: Int -> Filme -> Filme
 mudaId newIdent filme = filme { ident = newIdent }
 
 adicionarFilmeJSON :: Filme -> IO()
-adicionarFilmeJSON administrador = do
+adicionarFilmeJSON filme = do
   let conteudo = getAllFilmesJSON
-  listaAdmins <- retornaLista conteudo administrador
+  listaFilmes <- retornaLista conteudo filme
 
-  B.writeFile constanteTempPATH $ encode listaAdmins
+  B.writeFile constanteTempPATH $ encode listaFilmes
   removeFile constantePATH
   renameFile constanteTempPATH constantePATH
+
+checaNumeroMaximoDeFilmesAtingido :: IO Bool
+checaNumeroMaximoDeFilmesAtingido = do
+    listaFilmes <- getAllFilmesJSON
+    if length listaFilmes == 5
+        then return True
+        else return False
 
 ---------------------------------------------------
 
 loadMovies :: IO ()
 loadMovies = do
+    conteudoBase <- readFile interfaceMenuCompraBase
+    writeFile interfaceMenuCompra conteudoBase
     filmes <- getAllFilmesJSON
     atualizaFilmes filmes
-
---loadMovies :: IO ()
---loadMovies = do
-  --  base <- readFile "./Interfaces/Compras/MenuComprasBase.txt"
-   -- writeFile interfaceMenuCompra base
-   -- let position = getMoviePosition 2
-   -- writeMatrixValue interfaceMenuCompra " Outro Aqui " (head position) (last position)
-
 
 atualizaFilmes :: [Filme] -> IO ()
 atualizaFilmes [] = return ()
 atualizaFilmes (x:xs) = do
     let id = ident x
-    atualizaFilmeNaInterface id (titulo x)
+    atualizaNomeFilmeNaInterface id (titulo x)
+    atualizaDuracaoFilmeNaInterface id (duracao x)
+    atualizaGeneroFilmesNaInterface id (genero x)
     atualizaFilmes xs
 
-atualizaFilmeNaInterface :: Int -> String -> IO ()
-atualizaFilmeNaInterface  id titulo = do
+atualizaNomeFilmeNaInterface :: Int -> String -> IO ()
+atualizaNomeFilmeNaInterface  id titulo = do
     let posicao = getMoviePosition id
     writeMatrixValue interfaceMenuCompra titulo (head posicao) (last posicao)
+
+atualizaDuracaoFilmeNaInterface :: Int -> String -> IO ()
+atualizaDuracaoFilmeNaInterface  id duracao  = do
+    let posicao = getMoviePosition id
+    writeMatrixValue interfaceMenuCompra ("Duração: " ++ duracao) (head posicao + 1) (last posicao)
+
+atualizaGeneroFilmesNaInterface :: Int -> String -> IO ()
+atualizaGeneroFilmesNaInterface id genero = do 
+    let posicao = getMoviePosition id 
+    writeMatrixValue interfaceMenuCompra ("Gênero: " ++ genero) (head posicao + 2) (last posicao) 
+
 
 -- Pega um filme pelo seu id
 getFilmeByID :: Int -> IO Filme

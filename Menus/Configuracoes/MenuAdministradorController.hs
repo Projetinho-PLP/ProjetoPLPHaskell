@@ -5,10 +5,16 @@ import Servicos.MenuConfiguracoes.Administrador.ManipulaAdministrador ( adiciona
 import System.IO ( hFlush, stdout )
 import Control.Concurrent ( threadDelay )
 import Data.Char (toUpper)
+--import GHC.IO.FD (stdout)
+--import GHC.IO.Handle (hFlush)
 
 import Modelos.Administrador
+import Modelos.Sessao
 import Modelos.Filme (Filme(duracao, Filme))
-import Servicos.Filmes.FilmesController (adicionarFilmeJSON, checaNumeroMaximoDeFilmesAtingido)
+
+import Servicos.Filmes.FilmesController (adicionarFilmeJSON,getFilmeByID,contemFilme,getAllFilmesJSON,checaNumeroMaximoDeFilmesAtingido)
+import Servicos.Sessao.SessaoServico (adicionaSessaoJSON)
+import Modelos.Sessao (Sessao(horario, capacidade))
 
 
 
@@ -20,11 +26,14 @@ startMenuAdmin = do
     userChoice <- getLine
     let userChoiceUpper = map toUpper userChoice
     escolhaMenu userChoiceUpper
+    startMenuAdmin
+     
 
 escolhaMenu :: String -> IO()
 escolhaMenu userChoice
     | userChoice == "A" = adicionarAdministrador
     | userChoice == "F" = adicionarFilmes
+    | userChoice == "S" = adicionarSessao
     | otherwise = do
         putStrLn "\nOpção inválida"
         threadDelay 700000
@@ -41,8 +50,8 @@ adicionarAdministrador = do
     senha <- getLine
     let administrador = Administrador 0 user senha
    -- putStrLn $ show administrador
-    adicionarAdministradorJSON administrador >>= \_ -> startMenuAdmin
-    
+    adicionarAdministradorJSON administrador >> startMenuAdmin
+
 
 
 -- Modifique como quiser essa função
@@ -67,3 +76,30 @@ adicionarFilmes = do
         let filme = Filme 0 titulo duracao genero
         adicionarFilmeJSON filme
         startMenuAdmin
+
+adicionarSessao :: IO()
+adicionarSessao = do
+    printMatrix "./Interfaces/Configuracoes/ManuCadastroSessao.txt"
+    putStr "Digite o Identificador do filme: "
+    hFlush stdout
+    idFilme <- readLn:: IO Int
+    filmes <- getAllFilmesJSON
+    if contemFilme idFilme filmes then
+        do
+            filme <- getFilmeByID idFilme
+            putStr "Digite o horario no formato (<hora>, <minutos>): "
+            hFlush stdout
+            horario <- readLn:: IO(Int, Int)
+            putStr "Informe a capacidade: "
+            hFlush stdout
+            capacidade <- readLn::IO(Int)
+            putStr "Informe o ID da sala: "
+            hFlush stdout
+            idSala <- readLn::IO(Int)
+            let sessao = Sessao 0 filme horario capacidade idSala
+            adicionaSessaoJSON sessao
+        else do
+            putStrLn "Filme não registrado"
+            threadDelay 1200000
+            
+

@@ -9,9 +9,11 @@ import qualified Data.ByteString.Lazy as B
 import Data.Aeson
 import System.Directory
 import Data.Maybe
+import Data.Bool (Bool)
+import Data.Int (Int)
 
-instance FromJSON Filme
-instance ToJSON Filme
+--instance FromJSON Filme
+--instance ToJSON Filme
 
 
 --- Constante Utilizadas
@@ -99,6 +101,13 @@ getFilmeByID :: Int -> IO Filme
 getFilmeByID id = do
     filmes <- getAllFilmesJSON  -- Obter a lista de filmes
     return $ fromMaybe (Filme (-1) "" "" "") (getFilmeAuxiliar id filmes)
+
+-- Verifica se um filme foi cadastrado a partir do id
+contemFilme :: Int -> [Filme] -> Bool
+contemFilme _ [] = False
+contemFilme idFilme (x:xs)
+    | ident x == idFilme = True
+    | otherwise = contemFilme idFilme xs
 
 -- Função auxiliar para obter um filme da lista pelo ID
 getFilmeAuxiliar :: Int -> [Filme] -> Maybe Filme

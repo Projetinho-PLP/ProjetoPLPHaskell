@@ -43,8 +43,7 @@ getAdministradorJSON = do
 mudaId:: Int -> Administrador -> Administrador
 mudaId newIdent administrador = administrador { ident = newIdent }
 
-
-
+-- Funcao interna para validar Administrador
 validarAdministrador :: Administrador -> [Administrador] -> Bool
 validarAdministrador _ [] = False
 validarAdministrador admin (x:xs) 
@@ -54,7 +53,7 @@ validarAdministrador admin (x:xs)
 
 -- Funções que se comunicam com controller
 
-
+-- Adicionar Administrador no arquivo JSON
 adicionarAdministradorJSON :: Administrador -> IO()
 adicionarAdministradorJSON administrador = do
   let conteudo = getAdministradorJSON
@@ -64,7 +63,8 @@ adicionarAdministradorJSON administrador = do
   removeFile constantePATH
   renameFile constanteTempPATH constantePATH
 
-  
+
+-- REcebe um Administrador e verifica se foi cadastrado 
 validarAdministradorJSON :: Administrador -> IO Bool
 validarAdministradorJSON administrador = do
   conteudo <- getAdministradorJSON

@@ -13,6 +13,7 @@ import Data.Bool (Bool)
 import Modelos.Sessao (Sessao(horario))
 import Control.Concurrent (threadDelay)
 import Data.String (String)
+import qualified Modelos.Administrador 
 
 instance FromJSON Sessao
 instance ToJSON Sessao
@@ -44,15 +45,6 @@ retornaLista acaoLista sessao = do
 mudaId:: Int -> Sessao -> Sessao
 mudaId newIdent sessao = sessao { ident = newIdent }
 
--- Realiza as validações na sessao para adicionar ao JSON
-adicionaSessao:: Sessao -> IO()
-adicionaSessao sessao = do
-    if not(validaHorario (horario sessao))
-        then do
-            print("Horario invalido(hora >= 0 e <=23, minuto >=0 e <= 59).")
-            threadDelay 100000
-        else do
-            putStrLn ""
     
 -- Adiciona uma sessao ao arquivo JSON
 adicionaSessaoJSON:: Sessao -> IO()
@@ -65,9 +57,33 @@ adicionaSessaoJSON sessao = do
     renameFile constanteTempPATH constantePATH
 
 
---validaSessao:: Sessao -> IO Bool
---validaSessao sessao = do
+-- A regra para registrar duas sessoes na mesma sala é que outra sessao só pode ser cadastrada
+-- uma hora após um filme acabar
+validaSessaoSala :: Sessao -> IO Bool
+validaSessaoSala sessao = do
+    sessoes <- getSessoesJSON
+    return True
+
+-- Compara duas sessoes para saber se são na mesma sala e se a regra de cadastro é valida
+comparaHorarioSessao:: Sessao -> Sessao -> Bool
+comparaHorarioSessao sessao compara = (idSala sessao == idSala compara)
+
+
+
 
 -- Verifica se o horario  esta no formato correto, hora >=0 e <=23 e minuto >=0 e <=59
 validaHorario:: (Int, Int) -> Bool
 validaHorario (hora, minuto) = (hora >= 0 && hora <= 23) && (minuto >=0 && minuto <= 59)
+
+
+-- Funções que se comunicam com o Controller
+
+-- Realiza as validações na sessao para adicionar ao JSON
+adicionaSessao:: Sessao -> IO()
+adicionaSessao sessao = do
+    if not(validaHorario (horario sessao))
+        then do
+            print("Horario invalido(hora >= 0 e <=23, minuto >=0 e <= 59).")
+            threadDelay 100000
+        else do
+            putStrLn ""

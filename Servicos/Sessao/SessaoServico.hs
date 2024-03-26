@@ -15,7 +15,7 @@ import Modelos.Sessao (Sessao(horario))
 import Control.Concurrent (threadDelay)
 import Data.String (String)
 import qualified Modelos.Administrador 
-import Modelos.Filme (Filme(Filme, ident))
+import Modelos.Filme (Filme(Filme, ident, duracao))
 
 instance FromJSON Sessao
 instance ToJSON Sessao
@@ -61,19 +61,33 @@ adicionaSessaoJSON sessao = do
 
 -- A regra para registrar duas sessoes na mesma sala é que outra sessao só pode ser cadastrada
 -- uma hora após um filme acabar
-validaSessaoSala :: Sessao -> IO Bool
-validaSessaoSala sessao = do
-    sessoes <- getSessoesJSON
-    return True
+validaSessaoSala :: Sessao -> Sessao -> Bool
+validaSessaoSala novaSessao sessaoExistente =
+  idSala novaSessao == idSala sessaoExistente
+    && (comparaHorarioSessao (horario novaSessao) (horario sessaoExistente) || verificaFilmeTerminou novaSessao sessaoExistente)
 
--- Compara duas sessoes para saber se são na mesma sala e se a regra de cadastro é valida
-comparaHorarioSessao:: Sessao -> Sessao -> Bool
-comparaHorarioSessao sessao compara = (idSala sessao == idSala compara)
-
+-- Função para comparar o horário das sessões
+comparaHorarioSessao :: (Int, Int) -> (Int, Int) -> Bool
+comparaHorarioSessao (hora1, minuto1) (hora2, minuto2) = hora1 == hora2
 
 -- Verifica se o horario  esta no formato correto, hora >=0 e <=23 e minuto >=0 e <=59
-validaHorario:: (Int, Int) -> Bool
-validaHorario (hora, minuto) = (hora >= 0 && hora <= 23) && (minuto >=0 && minuto <= 59)
+validaHorario :: (Int, Int) -> Bool
+validaHorario (hora, minuto) = (hora >= 0 && hora <= 23) && (minuto >= 0 && minuto <= 59)
+
+verificaFilmeTerminou :: Sessao -> Sessao -> Bool
+verificaFilmeTerminou novaSessao sessaoExistente =
+  let duracaoFilmeSessaoExistente = read (duracao (filme sessaoExistente)) :: Int
+      duracaoFilmeSessaoNova = read (duracao (filme novaSessao)) :: Int
+      (horasSessaoExistente, minutosSessaoExistente) = horario sessaoExistente
+      (horasSessaoNova, minutosSessaoNova) = horario novaSessao
+      totalMinutosExistentes = horasSessaoExistente * 60 + duracaoFilmeSessaoExistente + minutosSessaoExistente
+      totalMinutosNova = horasSessaoNova * 60 + duracaoFilmeSessaoNova + minutosSessaoNova
+      totalMinutosSessaoNova = horasSessaoNova * 60 + minutosSessaoNova
+      totalMinutosSessaoExistente = horasSessaoExistente * 60 + minutosSessaoExistente
+   in if horasSessaoNova < horasSessaoExistente
+        then totalMinutosSessaoExistente - totalMinutosNova < 60
+        else totalMinutosSessaoNova - totalMinutosExistentes < 60
+
 
 
 -- Funções que se comunicam com o Controller

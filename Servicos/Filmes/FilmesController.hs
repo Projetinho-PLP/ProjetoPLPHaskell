@@ -11,6 +11,7 @@ import System.Directory
 import Data.Maybe
 import Data.Bool (Bool)
 import Data.Int (Int)
+import Servicos.Sessao.AtualizaSessaoInterfaceServico
 
 --instance FromJSON Filme
 --instance ToJSON Filme
@@ -63,7 +64,7 @@ checaNumeroMaximoDeFilmesAtingido = do
         else return False
 
 ---------------------------------------------------
-
+---Funções para atualização de filmes na interface 
 loadMovies :: IO ()
 loadMovies = do
     conteudoBase <- readFile interfaceMenuCompraBase
@@ -78,12 +79,13 @@ atualizaFilmes (x:xs) = do
     atualizaNomeFilmeNaInterface id (titulo x)
     atualizaDuracaoFilmeNaInterface id (duracao x)
     atualizaGeneroFilmesNaInterface id (genero x)
+    loadSessoesDoFilme id
     atualizaFilmes xs
 
 atualizaNomeFilmeNaInterface :: Int -> String -> IO ()
 atualizaNomeFilmeNaInterface  id titulo = do
     let posicao = getMoviePosition id
-    writeMatrixValue interfaceMenuCompra titulo (head posicao) (last posicao)
+    writeMatrixValue interfaceMenuCompra ("(" ++show id++ ") "++ titulo) (head posicao) (last posicao)
 
 atualizaDuracaoFilmeNaInterface :: Int -> String -> IO ()
 atualizaDuracaoFilmeNaInterface  id duracao  = do
@@ -94,7 +96,7 @@ atualizaGeneroFilmesNaInterface :: Int -> String -> IO ()
 atualizaGeneroFilmesNaInterface id genero = do 
     let posicao = getMoviePosition id 
     writeMatrixValue interfaceMenuCompra ("Gênero: " ++ genero) (head posicao + 2) (last posicao) 
-
+----------------------
 
 -- Pega um filme pelo seu id
 getFilmeByID :: Int -> IO Filme
@@ -118,8 +120,8 @@ getFilmeAuxiliar identifierS (x:xs)
 
 getMoviePosition :: Int -> [Int]
 getMoviePosition id
-    | id == 1 = [12, 5]
-    | id == 2 = [17, 5]
-    | id == 3 = [22, 5]
-    | id == 4 = [27, 5]
-    | id == 5 = [32, 5]
+    | id == 1 = [12, 3]
+    | id == 2 = [17, 3]
+    | id == 3 = [22, 3]
+    | id == 4 = [27, 3]
+    | id == 5 = [32, 3]

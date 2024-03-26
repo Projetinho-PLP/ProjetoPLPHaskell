@@ -21,7 +21,7 @@ startMenu = do
 optionsStartMenu :: String -> IO ()
 optionsStartMenu userChoice
     | userChoice == "I" = startMenuCompra 
-    | userChoice == "A" = startMenuConfiguracao
+    | userChoice == "A" = startMenuConfiguracao startMenu
     | userChoice == "B" = startMenuBomboniere
     | otherwise = do
         putStrLn "\nOpção Inválida!"

@@ -1,6 +1,7 @@
 {-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Use <$>" #-}
+{-# HLINT ignore "Use when" #-}
 module Servicos.Sessao.SessaoServico where
 
 
@@ -14,6 +15,7 @@ import Modelos.Sessao (Sessao(horario))
 import Control.Concurrent (threadDelay)
 import Data.String (String)
 import qualified Modelos.Administrador 
+import Modelos.Filme (Filme(Filme, ident))
 
 instance FromJSON Sessao
 instance ToJSON Sessao
@@ -43,7 +45,7 @@ retornaLista acaoLista sessao = do
 
 -- Muda o id de umma sessao de acordo com a quantidade de sessoes
 mudaId:: Int -> Sessao -> Sessao
-mudaId newIdent sessao = sessao { ident = newIdent }
+mudaId newIdent sessao = sessao { Modelos.Sessao.ident = newIdent }
 
     
 -- Adiciona uma sessao ao arquivo JSON
@@ -67,8 +69,6 @@ validaSessaoSala sessao = do
 -- Compara duas sessoes para saber se são na mesma sala e se a regra de cadastro é valida
 comparaHorarioSessao:: Sessao -> Sessao -> Bool
 comparaHorarioSessao sessao compara = (idSala sessao == idSala compara)
-
-
 
 
 -- Verifica se o horario  esta no formato correto, hora >=0 e <=23 e minuto >=0 e <=59

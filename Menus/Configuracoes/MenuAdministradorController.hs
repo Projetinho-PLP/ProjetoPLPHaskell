@@ -14,33 +14,34 @@ import Modelos.Filme (Filme(duracao, Filme))
 
 import Servicos.Filmes.FilmesController (adicionarFilmeJSON,getFilmeByID,contemFilme,getAllFilmesJSON,checaNumeroMaximoDeFilmesAtingido)
 import Servicos.Sessao.SessaoServico (adicionaSessaoJSON)
-import Modelos.Sessao (Sessao(horario, capacidade))
 
 
 
-startMenuAdmin::IO()
-startMenuAdmin = do
+startMenuAdmin::IO () -> IO ()
+startMenuAdmin startMenuPrincipal = do
     printMatrix "./Interfaces/Configuracoes/menuConfiguracoesAdmin.txt"
     putStr "Digite uma opção: "
     hFlush stdout
     userChoice <- getLine
     let userChoiceUpper = map toUpper userChoice
-    escolhaMenu userChoiceUpper
-    startMenuAdmin
-     
+    escolhaMenu userChoiceUpper startMenuPrincipal
+    startMenuAdmin startMenuPrincipal
 
-escolhaMenu :: String -> IO()
-escolhaMenu userChoice
-    | userChoice == "A" = adicionarAdministrador
-    | userChoice == "F" = adicionarFilmes
+
+escolhaMenu :: String -> IO () -> IO ()
+escolhaMenu userChoice startMenuPrincipal
+    | userChoice == "A" = adicionarAdministrador startMenuPrincipal
+    | userChoice == "F" = adicionarFilmes startMenuPrincipal
     | userChoice == "S" = adicionarSessao
+    | userChoice == "V" = startMenuPrincipal
     | otherwise = do
         putStrLn "\nOpção inválida"
         threadDelay 700000
-        startMenuAdmin
+        startMenuAdmin startMenuPrincipal
 
-adicionarAdministrador :: IO()
-adicionarAdministrador = do
+
+adicionarAdministrador :: IO () -> IO ()
+adicionarAdministrador startMenuPrincipal = do
     printMatrix "./Interfaces/Configuracoes/menuConfiguracoesLogin.txt"
     putStr "Digite seu user: "
     hFlush stdout
@@ -50,20 +51,20 @@ adicionarAdministrador = do
     senha <- getLine
     let administrador = Administrador 0 user senha
    -- putStrLn $ show administrador
-    adicionarAdministradorJSON administrador >> startMenuAdmin
+    adicionarAdministradorJSON administrador >> startMenuAdmin startMenuPrincipal
 
 
 
 -- Modifique como quiser essa função
-adicionarFilmes :: IO()
-adicionarFilmes = do
+adicionarFilmes :: IO () -> IO ()
+adicionarFilmes startMenuPrincipal = do
     numeroDeFilmes <- checaNumeroMaximoDeFilmesAtingido
-    if numeroDeFilmes 
+    if numeroDeFilmes
         then do
             putStr "Número maximo de filmes atingido"
             threadDelay 3000000
-            startMenuAdmin
-    else do 
+            startMenuAdmin startMenuPrincipal
+    else do
         printMatrix "./Interfaces/Configuracoes/MenuCadastroDeFilmes.txt"
         putStr "Digite o título do filmes: "
         hFlush stdout
@@ -75,7 +76,7 @@ adicionarFilmes = do
         genero <- getLine
         let filme = Filme 0 titulo duracao genero
         adicionarFilmeJSON filme
-        startMenuAdmin
+        startMenuAdmin startMenuPrincipal
 
 adicionarSessao :: IO()
 adicionarSessao = do
@@ -101,5 +102,5 @@ adicionarSessao = do
         else do
             putStrLn "Filme não registrado"
             threadDelay 1200000
-            
+
 

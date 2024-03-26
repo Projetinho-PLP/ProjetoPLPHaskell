@@ -11,8 +11,8 @@ import Data.String (String)
 interfaceLogin :: String
 interfaceLogin = "./Interfaces/Configuracoes/menuConfiguracoesLogin.txt"
 
-startMenuConfiguracao :: IO()
-startMenuConfiguracao = do
+startMenuConfiguracao :: IO () -> IO ()
+startMenuConfiguracao startMenuPrincipal = do
     printMatrix "./Interfaces/Configuracoes/menuConfiguracoesLogin.txt"
     putStr "Digite seu user: "
     hFlush stdout
@@ -23,11 +23,11 @@ startMenuConfiguracao = do
     let administrador = Administrador 0 user senha
     validacao <- validarAdministradorJSON administrador
     if (validacao == True)
-        then startMenuAdmin
-        else loginInvalido
+        then startMenuAdmin startMenuPrincipal
+        else loginInvalido startMenuPrincipal
 
-loginInvalido :: IO()
-loginInvalido = do
+loginInvalido :: IO () -> IO ()
+loginInvalido startMenuPrincipal = do
     printMatrix "./Interfaces/Configuracoes/menuConfiguracoesLoginInvalido.txt"
     putStr "Digite seu user: "
     hFlush stdout
@@ -38,5 +38,5 @@ loginInvalido = do
     let administrador = Administrador 0 user senha
     validacao <- validarAdministradorJSON administrador
     if (validacao == True)
-        then startMenuAdmin
-        else loginInvalido
+        then startMenuAdmin startMenuPrincipal
+        else loginInvalido startMenuPrincipal

@@ -93,11 +93,19 @@ verificaFilmeTerminou novaSessao sessaoExistente =
 -- Funções que se comunicam com o Controller
 
 -- Realiza as validações na sessao para adicionar ao JSON
-adicionaSessao:: Sessao -> IO()
+adicionaSessao :: Sessao -> IO ()
 adicionaSessao sessao = do
-    if not(validaHorario (horario sessao))
+  if not (validaHorario (horario sessao))
+    then do
+      print "Horario invalido (hora >= 0 e <=23, minuto >=0 e <= 59)."
+      threadDelay 1200000
+    else do
+      sessoesExistem <- getSessoesJSON
+      if any (validaSessaoSala sessao) sessoesExistem
         then do
-            print("Horario invalido(hora >= 0 e <=23, minuto >=0 e <= 59).")
-            threadDelay 100000
+          putStrLn "Já existe uma sessão na mesma sala e horário."
+          threadDelay 1200000
         else do
-            putStrLn ""
+          adicionaSessaoJSON sessao
+          putStrLn "Sessão cadastrada com sucesso!!"
+          threadDelay 1200000

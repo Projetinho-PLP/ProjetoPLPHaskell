@@ -13,7 +13,7 @@ import Modelos.Sessao
 import Modelos.Filme (Filme(duracao, Filme))
 
 import Servicos.Filmes.FilmesController (adicionarFilmeJSON,getFilmeByID,contemFilme,getAllFilmesJSON,checaNumeroMaximoDeFilmesAtingido)
-import Servicos.Sessao.SessaoServico (adicionaSessaoJSON)
+import Servicos.Sessao.SessaoServico (adicionaSessaoJSON, getSessoesJSON, adicionaSessao)
 
 
 
@@ -97,8 +97,9 @@ adicionarSessao = do
             putStr "Informe o ID da sala: "
             hFlush stdout
             idSala <- readLn::IO(Int)
-            let sessao = Sessao 0 filme horario capacidade idSala
-            adicionaSessaoJSON sessao
+            let novaSessao = Sessao 0 filme horario capacidade idSala
+            sessoesExistem <- getSessoesJSON
+            adicionaSessao novaSessao
         else do
             putStrLn "Filme não registrado"
             threadDelay 1200000

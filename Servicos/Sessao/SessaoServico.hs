@@ -1,63 +1,61 @@
 {-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+
 {-# HLINT ignore "Use <$>" #-}
 {-# HLINT ignore "Use when" #-}
 module Servicos.Sessao.SessaoServico where
 
-
-import Modelos.Sessao
-import Data.Aeson ( FromJSON, ToJSON, encode,decode )
-import qualified Data.ByteString.Lazy as B
-import System.Directory
-import Data.Maybe
-import Data.Bool (Bool)
-import Modelos.Sessao (Sessao(horario))
 import Control.Concurrent (threadDelay)
+import Data.Aeson (FromJSON, ToJSON, decode, encode)
+import Data.Bool (Bool)
+import Data.ByteString.Lazy qualified as B
+import Data.List (delete)
+import Data.Maybe
 import Data.String (String)
-import qualified Modelos.Administrador 
-import Modelos.Filme (Filme(Filme, ident, duracao))
+import Modelos.Administrador qualified
+import Modelos.Filme (Filme (Filme, duracao, ident))
+import Modelos.Sessao
+import Modelos.Sessao (Sessao (horario))
+import System.Directory
 
 instance FromJSON Sessao
+
 instance ToJSON Sessao
 
-constantePATH:: String
+constantePATH :: String
 constantePATH = "./BancoDeDados/Sessao.json"
 
-constanteTempPATH:: String
+constanteTempPATH :: String
 constanteTempPATH = "./BancoDeDados/SessaoTemp.json"
 
-
 -- Retorna uma lista com todas as sessoes cadastradas
-getSessoesJSON:: IO [Sessao]
+getSessoesJSON :: IO [Sessao]
 getSessoesJSON = do
-    file <- B.readFile constantePATH
-    let decodedFile = decode file :: Maybe [Sessao]
-    case decodedFile of
-        Nothing -> pure []
-        Just out -> pure out
+  file <- B.readFile constantePATH
+  let decodedFile = decode file :: Maybe [Sessao]
+  case decodedFile of
+    Nothing -> pure []
+    Just out -> pure out
 
 -- Recebe um IO[Sessao] e uma sessao e retorna uma nova lista adicionando as duas
 retornaLista :: IO [Sessao] -> Sessao -> IO [Sessao]
 retornaLista acaoLista sessao = do
-    lista <- acaoLista
-    return (lista ++ [mudaId (length lista + 1) sessao])
-
+  lista <- acaoLista
+  return (lista ++ [mudaId (length lista + 1) sessao])
 
 -- Muda o id de umma sessao de acordo com a quantidade de sessoes
-mudaId:: Int -> Sessao -> Sessao
-mudaId newIdent sessao = sessao { Modelos.Sessao.ident = newIdent }
+mudaId :: Int -> Sessao -> Sessao
+mudaId newIdent sessao = sessao {Modelos.Sessao.ident = newIdent}
 
-    
 -- Adiciona uma sessao ao arquivo JSON
-adicionaSessaoJSON:: Sessao -> IO()
+adicionaSessaoJSON :: Sessao -> IO ()
 adicionaSessaoJSON sessao = do
-    let conteudo = getSessoesJSON
-    listaSessoes <- retornaLista conteudo sessao
-        
-    B.writeFile constanteTempPATH $ encode listaSessoes
-    removeFile constantePATH
-    renameFile constanteTempPATH constantePATH
+  let conteudo = getSessoesJSON
+  listaSessoes <- retornaLista conteudo sessao
 
+  B.writeFile constanteTempPATH $ encode listaSessoes
+  removeFile constantePATH
+  renameFile constanteTempPATH constantePATH
 
 -- A regra para registrar duas sessoes na mesma sala é que outra sessao só pode ser cadastrada
 -- uma hora após um filme acabar
@@ -88,10 +86,38 @@ verificaFilmeTerminou novaSessao sessaoExistente =
         then totalMinutosSessaoExistente - totalMinutosNova < 60
         else totalMinutosSessaoNova - totalMinutosExistentes < 60
 
+-- Deleta uma sessao do arquivo JSON a partir do identificador
+deletaSessao :: Int -> IO ()
+deletaSessao identificador = do
+  sessoes <- getSessoesJSON
+  let novaLista = deleteSessaoPorIdentificador identificador sessoes
+  if length novaLista /= length sessoes
+    then do
+      B.writeFile constanteTempPATH $ encode novaLista
+      removeFile constantePATH
+      renameFile constanteTempPATH constantePATH
+      putStrLn "Sessão deletada com sucesso!"
+      threadDelay 1200000
+    else do
+      putStrLn "Não foi encontrada uma sessão com o identificador fornecido."
+      threadDelay 1200000
+
+-- Remove uma sessao da lista com base no identificador
+deleteSessaoPorIdentificador :: Int -> [Sessao] -> [Sessao]
+deleteSessaoPorIdentificador _ [] = []
+deleteSessaoPorIdentificador identificador (sessao : outrasSessoes)
+  | Modelos.Sessao.ident sessao == identificador = outrasSessoes
+  | otherwise = sessao : deleteSessaoPorIdentificador identificador outrasSessoes
+
+-- Verifica se uma sessao foi cadastrado a partir do id
+contemSessao :: Int -> [Sessao] -> Bool
+contemSessao _ [] = False
+contemSessao idSessao (sessao:outrasSessoes)
+    | Modelos.Sessao.ident sessao == idSessao = True
+    | otherwise = contemSessao idSessao outrasSessoes
 
 
 -- Funções que se comunicam com o Controller
-
 -- Realiza as validações na sessao para adicionar ao JSON
 adicionaSessao :: Sessao -> IO ()
 adicionaSessao sessao = do

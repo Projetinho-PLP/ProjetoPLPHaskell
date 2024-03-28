@@ -9,14 +9,14 @@
 |                       ╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝╚══════╝╚══════╝                             |
 │                                                                                                  │
 │                                                                                                  │
-│ (1) A volta do que não foi     SESSÃO 1         SESSÃO 2                                         │
-│ Duração: 120                   Horário: 12:0    Horário: 15:0                                    │
-│ Gênero: ok                     Sala: 1          Sala: 1                                          │
+│ (1) A volta do que não foi     SESSÃO 1                                                          │
+│ Duração: 120                   Horário: 13:30                                                    │
+│ Gênero: ok                     Sala: 1                                                           │
 │  ______________________________________________________________________________________________  │
 │                                                                                                  │
-│ (2) Todo mundo odeia o chris   SESSÃO 1                                                          │
-│ Duração: 120                   Horário: 9:0                                                      │
-│ Gênero: io                     Sala: 1                                                           │
+│ (2) Todo mundo odeia o chris                                                                     │
+│ Duração: 120                                                                                     │
+│ Gênero: io                                                                                       │
 │  ______________________________________________________________________________________________  │
 │                                                                                                  │
 │ (3) Dune                                                                                         │

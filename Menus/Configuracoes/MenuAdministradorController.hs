@@ -13,7 +13,7 @@ import Modelos.Sessao
 import Modelos.Filme (Filme(duracao, Filme))
 
 import Servicos.Filmes.FilmesController (adicionarFilmeJSON,getFilmeByID,contemFilme,getAllFilmesJSON,checaNumeroMaximoDeFilmesAtingido)
-import Servicos.Sessao.SessaoServico (adicionaSessaoJSON, getSessoesJSON, adicionaSessao)
+import Servicos.Sessao.SessaoServico (adicionaSessaoJSON, getSessoesJSON, adicionaSessao, deletaSessao, contemSessao)
 
 
 
@@ -33,6 +33,7 @@ escolhaMenu userChoice startMenuPrincipal
     | userChoice == "A" = adicionarAdministrador startMenuPrincipal
     | userChoice == "F" = adicionarFilmes startMenuPrincipal
     | userChoice == "S" = adicionarSessao
+    | userChoice == "DS" = deletarSessao
     | userChoice == "V" = startMenuPrincipal
     | otherwise = do
         putStrLn "\nOpção inválida"
@@ -105,3 +106,15 @@ adicionarSessao = do
             threadDelay 1200000
 
 
+deletarSessao :: IO ()
+deletarSessao = do
+    putStr "Digite o Identificador da Sessão: "
+    hFlush stdout
+    idSessao <- readLn:: IO Int
+    sessoes <- getSessoesJSON
+    if contemSessao idSessao sessoes then
+        do
+            deletaSessao idSessao
+        else do
+            putStrLn "Sessao não registrada"
+            threadDelay 1200000

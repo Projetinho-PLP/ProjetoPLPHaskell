@@ -11,9 +11,11 @@ import Data.Char (toUpper)
 import Modelos.Administrador
 import Modelos.Sessao
 import Modelos.Filme (Filme(duracao, Filme))
+import Modelos.Produto
 
 import Servicos.Filmes.FilmesController (adicionarFilmeJSON,getFilmeByID,contemFilme,getAllFilmesJSON,checaNumeroMaximoDeFilmesAtingido)
 import Servicos.Sessao.SessaoServico (adicionaSessaoJSON, getSessoesJSON, adicionaSessao, deletaSessao, contemSessao)
+import Servicos.Bomboniere.BomboniereService (adicionaProduto)
 
 
 
@@ -35,6 +37,7 @@ escolhaMenu userChoice startMenuPrincipal
     | userChoice == "S" = adicionarSessao
     | userChoice == "DS" = deletarSessao
     | userChoice == "V" = startMenuPrincipal
+    | userChoice == "P" = adicionarProduto
     | otherwise = do
         putStrLn "\nOpção inválida"
         threadDelay 700000
@@ -53,6 +56,23 @@ adicionarAdministrador startMenuPrincipal = do
     let administrador = Administrador 0 user senha
    -- putStrLn $ show administrador
     adicionarAdministradorJSON administrador >> startMenuAdmin startMenuPrincipal
+
+-- Modifique como quiser essa função
+adicionarProduto :: IO ()
+adicionarProduto  = do
+    -- printMatrix "./Interfaces/Configuracoes/MenuCadastroDeFilmes.txt"
+    putStr "Digite o nome do produto: "
+    hFlush stdout
+    nome <- getLine
+    putStr "Digite a categoria do produto: "
+    hFlush stdout
+    categoria <- getLine
+    putStr "Digite o valor do produto:"
+    hFlush stdout
+    valor <- getLine
+    let produto = Produto 0 nome categoria valor
+    adicionaProduto produto
+   
 
 
 

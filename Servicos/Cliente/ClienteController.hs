@@ -17,6 +17,8 @@ import System.Directory
 
 import Modelos.Filme (Filme)
 import Modelos.Cliente (Cliente(filmesAssistidos,email))
+import Modelos.Cliente
+import GHC.Arr (listArray)
 
 instance FromJSON Cliente
 instance ToJSON Cliente
@@ -33,7 +35,7 @@ compraCliente cliente = do
     clienteLista <- getClienteJSON
     if verificaCliente cliente clienteLista
         then 
-            adicionaFilmeCliente (filmesAssistidos cliente)
+            adicionaFilmeCliente (email cliente) (filmesAssistidos cliente)
         else
             cadastraCliente cliente
 
@@ -53,9 +55,19 @@ cadastraCliente cliente = do
 
 
 -- Adiciona um novo filme ao um cliente que existe
-adicionaFilmeCliente:: [Filme] -> IO()
-adicionaFilmeCliente filme = do
-    putStr "Cliente já cadastrado"
+adicionaFilmeCliente:: String -> [Filme] -> IO()
+adicionaFilmeCliente email filme = do
+    lista <- getClienteJSON
+    let clienteBanco = getClienteByEmail email lista
+    let filmesNovo = filme ++ (filmesAssistidos clienteBanco) 
+    let novoCliente = Cliente email filmesNovo
+    let listaClienteRemovido = removeCliente email lista
+    let novaLista = listaClienteRemovido ++ [novoCliente]
+
+    B.writeFile constanteTempPATH $ encode novaLista
+    removeFile constantePATH
+    renameFile constanteTempPATH constantePATH
+
 
 -- Recebe um IO[Cliente] e um Cliente e retorna uma nova lista adicionando as duas
 retornaLista :: IO [Cliente] -> Cliente -> IO [Cliente]
@@ -78,3 +90,18 @@ verificaCliente  _ [] = False
 verificaCliente cliente (clienteAtual: resto)
     | email cliente == email clienteAtual = True
     | otherwise = verificaCliente cliente resto
+
+-- Retorna um cliente (caso ele existe), com base no seu email
+getClienteByEmail:: String -> [Cliente] -> Cliente
+getClienteByEmail _ [] = Cliente "" []
+getClienteByEmail emailC (x:xs)
+    | emailC == (email x) = x
+    | otherwise = getClienteByEmail emailC xs
+
+-- Remove um cliente com base no seu email
+removeCliente:: String -> [Cliente] -> [Cliente]
+removeCliente _ [] = []
+removeCliente emailC (x:xs) 
+    | emailC == (email x) = xs
+    | otherwise = [x] ++ (removeCliente emailC xs)
+

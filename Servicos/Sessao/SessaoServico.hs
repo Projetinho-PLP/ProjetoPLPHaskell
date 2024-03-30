@@ -3,24 +3,22 @@
 
 {-# HLINT ignore "Use <$>" #-}
 {-# HLINT ignore "Use when" #-}
+{-# HLINT ignore "Redundant bracket" #-}
 module Servicos.Sessao.SessaoServico where
 
 import Control.Concurrent (threadDelay)
 import Data.Aeson (FromJSON, ToJSON, decode, encode)
 import Data.Bool (Bool)
-import Data.ByteString.Lazy qualified as B
+import qualified Data.ByteString.Lazy  as B
 import Data.List (delete)
 import Data.Maybe
 import Data.String (String)
-import Modelos.Administrador qualified
-import Modelos.Filme (Filme (Filme, duracao, ident))
+import qualified Modelos.Administrador
+import Modelos.Filme (Filme (Filme, duracao, ident, titulo))
 import Modelos.Sessao
-import Modelos.Sessao (Sessao (horario))
+    ( Sessao(idSala, filme, ident, horario, Sessao), Sessao(horario) )
 import System.Directory
 
-instance FromJSON Sessao
-
-instance ToJSON Sessao
 
 constantePATH :: String
 constantePATH = "./BancoDeDados/Sessao.json"
@@ -135,3 +133,36 @@ adicionaSessao sessao = do
           adicionaSessaoJSON sessao
           putStrLn "Sessão cadastrada com sucesso!!"
           threadDelay 1200000
+
+-- Pega uma sessão pelo seu id
+getSessaoByID :: Int -> IO Sessao
+getSessaoByID id = do
+    sessao <- getSessoesJSON  -- Obter a lista de sessoes
+    let filmeFake = Filme 0 "" "" ""
+    let sessaoFake = Sessao 0 filmeFake ((0, 0)) 0 0
+    let conteudo = fromMaybe sessaoFake (getSessaoAuxiliar id sessao)
+    return conteudo
+
+-- Função auxiliar para obter uma sessao da lista pelo ID
+getSessaoAuxiliar :: Int -> [Sessao] -> Maybe Sessao
+getSessaoAuxiliar _ [] = Nothing
+getSessaoAuxiliar identifierS (x:xs)
+    | Modelos.Sessao.ident x == identifierS = Just x
+    | otherwise = getSessaoAuxiliar identifierS xs
+
+getSessaoByNumeroDaInterface :: Int -> String -> IO Sessao
+getSessaoByNumeroDaInterface numeroDaInterface tituloDofilme = do
+    sessoes <- getSessoesJSON  -- Obter a lista de sessoes
+    let filmeFake = Filme 0 "" "" ""
+    let sessaoFake = Sessao 0 filmeFake ((0, 0)) 0 0
+    let conteudo = fromMaybe sessaoFake (getSessaoAuxiliarByNumero numeroDaInterface tituloDofilme sessoes)
+    return conteudo
+
+-- Função auxiliar para obter uma sessao da lista pelo ID
+getSessaoAuxiliarByNumero :: Int -> String -> [Sessao] -> Maybe Sessao
+getSessaoAuxiliarByNumero _ _ [] = Nothing
+getSessaoAuxiliarByNumero numeroDaInterface tituloDoFilme (x:xs) = do
+  let filmeDaSessao = filme x 
+  if (titulo filmeDaSessao) == tituloDoFilme then 
+    if numeroDaInterface == 1 then Just x else getSessaoAuxiliarByNumero (numeroDaInterface -1) tituloDoFilme xs 
+  else getSessaoAuxiliarByNumero numeroDaInterface tituloDoFilme xs

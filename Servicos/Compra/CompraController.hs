@@ -52,7 +52,7 @@ adicionaCompraJSON compra = do
 getCompraByID :: Int -> IO Compra
 getCompraByID id = do
     compras <- getComprasJSON 
-    let compraFake = Compra (-1) " " [] [] 
+    let compraFake = Compra (-1) "" 0 [] [] 0 
     let compra = fromMaybe compraFake (getCompraAuxiliar id compras)
     return compra
 
@@ -63,3 +63,7 @@ getCompraAuxiliar _ [] = Nothing
 getCompraAuxiliar identifierS (x:xs)
     | ident x == identifierS = Just x
     | otherwise = getCompraAuxiliar identifierS xs
+
+adicionaFilmeACOmpra :: compra -> IO()    
+adicionaFilmeACOmpra compra = do 
+  print "adicionado"

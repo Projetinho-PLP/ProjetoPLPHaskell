@@ -8,7 +8,9 @@ import Modelos.Sessao (Sessao)
 data Compra = Compra {
     ident:: Int,
     emailCliente:: String,
+    numeroIngressos :: Int,
     produtosComprados:: [Produto],
-    sessoesCompradas:: [Sessao]
+    sessoesCompradas:: [Sessao],
+    valorComprado :: Double
 } deriving (Show, Generic)
 

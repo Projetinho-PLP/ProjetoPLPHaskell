@@ -18,6 +18,7 @@ import Modelos.Filme (Filme (Filme, duracao, ident, titulo))
 import Modelos.Sessao
     ( Sessao(idSala, filme, ident, horario, Sessao), Sessao(horario) )
 import System.Directory
+import Modelos.Compra
 
 
 constantePATH :: String
@@ -166,3 +167,15 @@ getSessaoAuxiliarByNumero numeroDaInterface tituloDoFilme (x:xs) = do
   if (titulo filmeDaSessao) == tituloDoFilme then 
     if numeroDaInterface == 1 then Just x else getSessaoAuxiliarByNumero (numeroDaInterface -1) tituloDoFilme xs 
   else getSessaoAuxiliarByNumero numeroDaInterface tituloDoFilme xs
+
+diminueCapacidadeSessao:: Int -> Int -> IO()
+diminueCapacidadeSessao numIngressosComprados idSessao = do 
+  print "Capacidade Díminuida"
+
+
+getIdPrimeiraSessao :: Compra -> Maybe Int
+getIdPrimeiraSessao compra =
+    case sessoesCompradas compra of
+        [] -> Nothing 
+        (sessao:_) -> Just $ Modelos.Sessao.ident sessao -- Retorna o ID da primeira sessao 
+

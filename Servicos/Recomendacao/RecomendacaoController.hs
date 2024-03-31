@@ -69,11 +69,15 @@ limparArquivo = do
 atualizaFilmesRecomendados:: Int -> [Filme] -> IO()
 atualizaFilmesRecomendados _ [] = return ()
 atualizaFilmesRecomendados posicao (x:xs) = do
-    writeMatrixValue "./Interfaces/Recomendacoes/MenuRecomendacoesInterno.txt" ("(" ++ (show (ident x)) ++")") (12+posicao) (4)
-    writeMatrixValue "./Interfaces/Recomendacoes/MenuRecomendacoesInterno.txt" ( titulo x ) (12+posicao) (8)
-    writeMatrixValue "./Interfaces/Recomendacoes/MenuRecomendacoesInterno.txt" ("Genero: " ++ genero x ) (13+posicao) (4)
-    writeMatrixValue "./Interfaces/Recomendacoes/MenuRecomendacoesInterno.txt" ("Duracao: " ++ duracao x ) (14+posicao) (4)
-    atualizaFilmesRecomendados (posicao+4) xs
+    if (posicao <= 16) then 
+        do
+        writeMatrixValue "./Interfaces/Recomendacoes/MenuRecomendacoesInterno.txt" ("(" ++ (show (ident x)) ++")") (12+posicao) (4)
+        writeMatrixValue "./Interfaces/Recomendacoes/MenuRecomendacoesInterno.txt" ( titulo x ) (12+posicao) (8)
+        writeMatrixValue "./Interfaces/Recomendacoes/MenuRecomendacoesInterno.txt" ("Genero: " ++ genero x ) (13+posicao) (4)
+        writeMatrixValue "./Interfaces/Recomendacoes/MenuRecomendacoesInterno.txt" ("Duracao: " ++ duracao x ) (14+posicao) (4)
+        atualizaFilmesRecomendados (posicao+4) xs
+    else
+        return ()
 
 -- Retorna qual genero tem a maior ocorrencia
 analizaGenero:: [Filme] -> String

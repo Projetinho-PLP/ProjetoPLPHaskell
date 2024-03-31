@@ -63,7 +63,3 @@ getCompraAuxiliar _ [] = Nothing
 getCompraAuxiliar identifierS (x:xs)
     | ident x == identifierS = Just x
     | otherwise = getCompraAuxiliar identifierS xs
-
-adicionaFilmeACOmpra :: compra -> IO()    
-adicionaFilmeACOmpra compra = do 
-  print "adicionado"

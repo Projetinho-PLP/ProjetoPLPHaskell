@@ -170,8 +170,7 @@ getSessaoAuxiliarByNumero numeroDaInterface tituloDoFilme (x:xs) = do
 
 diminueCapacidadeSessao:: Int -> Int -> IO()
 diminueCapacidadeSessao numIngressosComprados idSessao = do 
-  print "Capacidade Díminuida"
-
+  print "\n"
 
 getIdPrimeiraSessao :: Compra -> Maybe Int
 getIdPrimeiraSessao compra =

@@ -10,7 +10,7 @@ import Servicos.Filmes.FilmesController (loadMovies, getFilmeByID)
 import Control.Concurrent (threadDelay)
 import Modelos.Cliente 
 import Servicos.Cliente.ClienteController (compraCliente)
-import Servicos.Compra.CompraController (adicionaCompraJSON, adicionaFilmeACOmpra)
+import Servicos.Compra.CompraController (adicionaCompraJSON)
 import Modelos.Compra (Compra(Compra, emailCliente, numeroIngressos, sessoesCompradas))
 import Servicos.Sessao.SessaoController (getSessaoByID, getSessaoByNumeroDaInterface)
 import Modelos.Filme (Filme(titulo))
@@ -54,19 +54,17 @@ getEmailComprador startMenuPrincipal = do
 startCompra :: IO() -> String -> IO()
 startCompra startMenuCompra emailComprador = do 
     printMatrix interfaceMenuCompra
-    putStrLn "Por favor, insira o número do filme e o número da sessão que deseja comprar"
-    hFlush stdout
-    putStr "Número do Filme:"
+    putStr "Por favor, insira o número do Filme: "
     hFlush stdout
     numeroFilme <- readLn :: IO Int
-    putStr "Número da Sessão:"
+    putStr "Por favor, insira o Número da Sessão: "
     hFlush stdout
     numeroSessao <- readLn :: IO Int
     filmeCompra <- getFilmeByID numeroFilme
     sessaoEValida <- isSessaoValida numeroSessao (titulo filmeCompra)
     if sessaoEValida  then do
         sessaoCompra <- getSessaoByNumeroDaInterface numeroSessao (titulo filmeCompra)
-        putStr "Quantidade de Ingressos:"
+        putStr "Quantidade de Ingressos: "
         hFlush stdout
         numeroIngressos <- readLn :: IO Int
         hFlush stdout 

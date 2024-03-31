@@ -9,7 +9,7 @@ module Servicos.Cliente.ClienteController where
 import Control.Concurrent (threadDelay)
 import Data.Aeson (FromJSON, ToJSON, decode, encode)
 import Data.Bool (Bool)
-import Data.ByteString.Lazy qualified as B
+import qualified Data.ByteString.Lazy as B
 import Data.List (delete)
 import Data.Maybe
 import Data.String (String)
@@ -64,7 +64,6 @@ cadastraCliente cliente = do
     B.writeFile constanteTempPATH $ encode listaSessoes
     removeFile constantePATH
     renameFile constanteTempPATH constantePATH
-
 
 -- Adiciona um novo filme ao um cliente que existe
 adicionaFilmeCliente:: String -> [Filme] -> IO()

@@ -23,8 +23,8 @@
 │                                                                                                  │
 │                                Ingresso -> I                                                     |
 |                                Bomboniere & Combos -> B                                          |
-│                                Login Administrador -> A                                          | 
-|                                                                                                  |
+│                                Menu de recomendações -> R                                        | 
+|                                Login Administrador -> A                                          |
 |                                                                                                  |
 |                                                                                                  |
 |                                                                                                  |

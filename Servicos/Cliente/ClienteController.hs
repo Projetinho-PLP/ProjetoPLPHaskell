@@ -39,6 +39,18 @@ compraCliente cliente = do
         else
             cadastraCliente cliente
 
+-- Função de verificação da existencia de um cliente, para se comunicar com funções externas
+contemCliente:: String -> IO Bool
+contemCliente email = do
+    lista <- getClienteJSON
+    let clienteTemp = Cliente email []
+    return (verificaCliente clienteTemp lista )
+
+-- Retorna um cliente, se comunica com funções externas
+retornaCliente:: String -> IO Cliente
+retornaCliente email = do
+    lista <- getClienteJSON
+    return (getClienteByEmail email lista)
 
 --------------------------------------------------------------------------
 -- FUNÇÕES INTERNAS
@@ -103,4 +115,5 @@ removeCliente _ [] = []
 removeCliente emailC (x:xs) 
     | emailC == (email x) = xs
     | otherwise = [x] ++ (removeCliente emailC xs)
+
 

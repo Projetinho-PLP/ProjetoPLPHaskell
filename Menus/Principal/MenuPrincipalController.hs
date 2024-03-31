@@ -7,6 +7,7 @@ import Menus.Compras.MenuCompraController ( startMenuCompra )
 import Menus.Configuracoes.MenuConfiguracoesController ( startMenuConfiguracao )
 import Servicos.Matriz.MatrizServices ( printMatrix )
 import Menus.Bomboniere.MenuBomboniereController (startMenuBomboniere)
+import Menus.Recomendacoes.MenuRecomendacaoController (startMenuRecomendacoes)
 
 startMenu :: IO ()
 startMenu = do
@@ -23,7 +24,12 @@ optionsStartMenu userChoice
     | userChoice == "I" = startMenuCompra 
     | userChoice == "A" = startMenuConfiguracao startMenu
     | userChoice == "B" = startMenuBomboniere
+    | userChoice == "R" = startMenuRecomendacoes menuPrincipalHandler
     | otherwise = do
         putStrLn "\nOpção Inválida!"
         threadDelay 700000
         startMenu
+    
+menuPrincipalHandler :: IO ()
+menuPrincipalHandler = do
+    startMenu

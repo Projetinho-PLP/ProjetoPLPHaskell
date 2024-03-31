@@ -6,7 +6,7 @@ import Control.Concurrent ( threadDelay )
 import Servicos.Matriz.MatrizServices ( printMatrix )
 
 import Servicos.Cliente.ClienteController( contemCliente )
-import Servicos.Recomendacao.RecomendacaoServico (recomendacaoCliente)
+import Servicos.Recomendacao.RecomendacaoController (recomendacaoCliente)
 
 startMenuRecomendacoes:: (IO()) -> IO()
 startMenuRecomendacoes backToMain = do

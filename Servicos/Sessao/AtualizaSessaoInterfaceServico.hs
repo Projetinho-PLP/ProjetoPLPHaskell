@@ -4,7 +4,7 @@
 module Servicos.Sessao.AtualizaSessaoInterfaceServico where
 import Modelos.Sessao ( Sessao(filme, ident, horario, idSala) )
 import Modelos.Filme ( Filme(ident, duracao) )
-import Servicos.Sessao.SessaoServico ( getSessoesJSON )
+import Servicos.Sessao.SessaoController ( getSessoesJSON )
 import Control.Concurrent ( threadDelay )
 import Servicos.Matriz.MatrizServices
 import qualified Modelos.Sessao as Modelos

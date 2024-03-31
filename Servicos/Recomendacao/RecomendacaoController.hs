@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Redundant bracket" #-}
-module Servicos.Recomendacao.RecomendacaoServico where
+module Servicos.Recomendacao.RecomendacaoController where
 
 import System.IO ( hFlush, stdout )
 import Data.List (group, sort, maximumBy)

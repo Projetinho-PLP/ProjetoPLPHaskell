@@ -7,7 +7,7 @@ import System.IO ( hFlush, stdout )
 import Data.Char
 import Control.Concurrent (threadDelay)
 import Servicos.Compra.CompraController (adicionaCompraJSON)
-import Servicos.Sessao.SessaoServico
+import Servicos.Sessao.SessaoController
 
 
 finalizaCompraService :: IO() -> Compra -> IO()

@@ -1,7 +1,7 @@
 module Menus.Configuracoes.MenuAdministradorController where
 
 import Servicos.Matriz.MatrizServices ( printMatrix )
-import Servicos.MenuConfiguracoes.Administrador.ManipulaAdministrador ( adicionarAdministradorJSON  )
+import Servicos.MenuConfiguracoes.AdministradorController( adicionarAdministradorJSON  )
 import System.IO ( hFlush, stdout )
 import Control.Concurrent ( threadDelay )
 import Data.Char (toUpper)
@@ -13,8 +13,7 @@ import Modelos.Sessao
 import Modelos.Filme (Filme(duracao, Filme))
 
 import Servicos.Filmes.FilmesController (adicionarFilmeJSON,getFilmeByID,contemFilme,getAllFilmesJSON,checaNumeroMaximoDeFilmesAtingido)
-import Servicos.Sessao.SessaoServico (adicionaSessaoJSON, getSessoesJSON, adicionaSessao, deletaSessao, contemSessao)
-
+import Servicos.Sessao.SessaoController (adicionaSessaoJSON, getSessoesJSON, adicionaSessao, deletaSessao, contemSessao)
 
 
 startMenuAdmin::IO () -> IO ()

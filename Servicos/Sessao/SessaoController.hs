@@ -4,7 +4,7 @@
 {-# HLINT ignore "Use <$>" #-}
 {-# HLINT ignore "Use when" #-}
 {-# HLINT ignore "Redundant bracket" #-}
-module Servicos.Sessao.SessaoServico where
+module Servicos.Sessao.SessaoController where
 
 import Control.Concurrent (threadDelay)
 import Data.Aeson (FromJSON, ToJSON, decode, encode)

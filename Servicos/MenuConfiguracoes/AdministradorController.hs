@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Servicos.MenuConfiguracoes.Administrador.ManipulaAdministrador where
+module Servicos.MenuConfiguracoes.AdministradorController where
 
 import Data.Aeson ( FromJSON, ToJSON, encode,decode )
 import qualified Data.ByteString.Lazy as B

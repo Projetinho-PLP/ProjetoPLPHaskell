@@ -12,7 +12,7 @@ import Modelos.Cliente
 import Servicos.Cliente.ClienteController (compraCliente)
 import Servicos.Compra.CompraController (adicionaCompraJSON, adicionaFilmeACOmpra)
 import Modelos.Compra (Compra(Compra, emailCliente, numeroIngressos, sessoesCompradas))
-import Servicos.Sessao.SessaoServico (getSessaoByID, getSessaoByNumeroDaInterface)
+import Servicos.Sessao.SessaoController (getSessaoByID, getSessaoByNumeroDaInterface)
 import Modelos.Filme (Filme(titulo))
 import Data.Char
 import Modelos.Sessao (Sessao(Sessao, ident))

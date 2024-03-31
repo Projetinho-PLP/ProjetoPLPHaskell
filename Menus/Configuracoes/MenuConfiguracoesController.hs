@@ -4,7 +4,7 @@ import Servicos.Matriz.MatrizServices ( printMatrix, writeMatrixValue )
 import Data.Char (toUpper)
 import Control.Concurrent ( threadDelay )
 import Modelos.Administrador
-import Servicos.MenuConfiguracoes.Administrador.ManipulaAdministrador ( adicionarAdministradorJSON, validarAdministradorJSON  )
+import Servicos.MenuConfiguracoes.AdministradorController ( adicionarAdministradorJSON, validarAdministradorJSON  )
 import Menus.Configuracoes.MenuAdministradorController ( startMenuAdmin )
 import Data.String (String)
 

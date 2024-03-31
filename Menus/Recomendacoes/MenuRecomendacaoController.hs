@@ -18,7 +18,7 @@ startMenuRecomendacoes backToMain = do
     if (verificaCliente)
         then do
             printMatrix "./Interfaces/Recomendacoes/MenuRecomendacoesInterno.txt"
-            recomendacaoCliente email
+            recomendacaoCliente email backToMain
         else do
             putStr "Email não cadastrao em nosso banco de dados."
             hFlush stdout

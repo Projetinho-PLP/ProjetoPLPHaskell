@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Redundant bracket" #-}
 module Servicos.Recomendacao.RecomendacaoServico where
 
 import System.IO ( hFlush, stdout )
@@ -17,6 +19,7 @@ import Servicos.Filmes.FilmesController (getAllFilmesJSON)
 import Data.String (String)
 import Data.Char (toUpper)
 import Menus.Compras.MenuCompraController (startMenuCompra)
+import Control.Concurrent
 
 constInterface:: String
 constInterface = "./Interfaces/Recomendacoes/MenuRecomendacoesInterno.txt"
@@ -28,8 +31,8 @@ constInterfaceTemp:: String
 constInterfaceTemp = "./Interfaces/Recomendacoes/MenuRecomendacoesInternoTemp.txt"
 
 
-recomendacaoCliente :: String -> IO()
-recomendacaoCliente emailCliente = do
+recomendacaoCliente :: String -> (IO()) -> IO()
+recomendacaoCliente emailCliente backToMain= do
     cliente <- retornaCliente emailCliente
     let recomendacaoClienteGenero = analizaGenero (filmesAssistidos cliente)
     print recomendacaoClienteGenero
@@ -39,14 +42,19 @@ recomendacaoCliente emailCliente = do
     filmes <- getAllFilmesJSON
     let filmesSelecionados = filmesRecomendadosGenero recomendacaoClienteGenero filmes 
     limparArquivo >> atualizaFilmesRecomendados 0 filmesSelecionados >> printMatrix "./Interfaces/Recomendacoes/MenuRecomendacoesInterno.txt"
-    putStr "Digite I para comprar ingressos: "
+    putStr "Digite uma opção: "
     hFlush stdout
     escolha <- getLine
-    if (paraMaiusculo escolha == "I")
-        then
-            startMenuCompra
-        else
-            recomendacaoCliente emailCliente
+    analisaEscolhaUser (map toUpper escolha) emailCliente backToMain
+
+analisaEscolhaUser :: String -> String -> (IO()) -> IO ()
+analisaEscolhaUser userChoice emailCliente backToMain
+    | userChoice == "I" = startMenuCompra backToMain
+    | userChoice == "V" = backToMain
+    | otherwise = do
+        putStrLn "\nOpção Inválida!"
+        threadDelay 1000000
+        recomendacaoCliente emailCliente backToMain
 
 ------- Funções internas do mudulo
 

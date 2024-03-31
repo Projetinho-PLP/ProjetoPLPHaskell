@@ -14,7 +14,8 @@
 │                                                                                                  │
 │                                ADICIONAR FILMES ► F                                              │
 │                                ADICIONAR ADMINISTRADOR ► A                                       │
-│                                ADICIONAR SESSAO ► S                                              │
+│                                ADICIONAR SESSAO ► S                                              |
+|                                VOLTAR ► V                                                        │
 │                                                                                                  │
 │                                                                                                  │
 │                                                                                                  │

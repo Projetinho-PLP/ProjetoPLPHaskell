@@ -21,7 +21,7 @@ startMenu = do
 --A partir da letra selecionada, chama o controller especifico de algum menu
 optionsStartMenu :: String -> IO ()
 optionsStartMenu userChoice
-    | userChoice == "I" = startMenuCompra 
+    | userChoice == "I" = startMenuCompra startMenu
     | userChoice == "A" = startMenuConfiguracao startMenu
     | userChoice == "B" = startMenuBomboniere
     | userChoice == "R" = startMenuRecomendacoes menuPrincipalHandler

@@ -22,15 +22,32 @@ import Servicos.Compra.FinalizaCompraService
 interfaceMenuCompra :: String
 interfaceMenuCompra = "./Interfaces/Compras/MenuCompras.txt"
 
-
-startMenuCompra :: IO ()
-startMenuCompra = do
+startMenuCompra:: IO () -> IO ()
+startMenuCompra startMenuPrincipal = do
     loadMovies
     printMatrix interfaceMenuCompra
+    putStr "Digite uma opção: "
+    hFlush stdout
+    userChoice <- getLine
+    let userChoiceUpper = map toUpper userChoice
+    escolhaMenu userChoiceUpper startMenuPrincipal
+
+
+escolhaMenu :: String -> IO () -> IO ()
+escolhaMenu userChoice startMenuPrincipal
+    | userChoice == "C" = getEmailComprador startMenuPrincipal
+    | userChoice == "V" = startMenuPrincipal
+    | otherwise = do
+        putStrLn "\nOpção inválida"
+        threadDelay 700000
+        startMenuCompra startMenuPrincipal
+
+getEmailComprador :: IO () -> IO ()
+getEmailComprador startMenuPrincipal = do
     putStr "Antes de fazer a compra, por favor informe o seu email: "
     hFlush stdout
     emailComprador <- getLine
-    startCompra startMenuCompra emailComprador 
+    startCompra (startMenuCompra startMenuPrincipal) emailComprador 
     
 
 
@@ -49,7 +66,7 @@ startCompra startMenuCompra emailComprador = do
     sessaoEValida <- isSessaoValida numeroSessao (titulo filmeCompra)
     if sessaoEValida  then do
         sessaoCompra <- getSessaoByNumeroDaInterface numeroSessao (titulo filmeCompra)
-        putStr "Quantos ingressos?"
+        putStr "Quantidade de Ingressos:"
         hFlush stdout
         numeroIngressos <- readLn :: IO Int
         hFlush stdout 
@@ -74,11 +91,7 @@ getSessoesCompradas :: Int -> String -> IO (Maybe Sessao)
 getSessoesCompradas numeroSessao tituloFilme = do
     sessaoCompra <- getSessaoByNumeroDaInterface numeroSessao tituloFilme
     if Modelos.Sessao.ident sessaoCompra == 0
-        then do
-            putStrLn "Número de sessão inválido, aguarde!"
-            threadDelay 2000000
-            startMenuCompra
-            return Nothing
+        then do return Nothing
         else return $ Just sessaoCompra
 
 associaCompraACliente :: String -> Filme -> IO()

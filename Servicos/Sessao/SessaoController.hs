@@ -169,8 +169,7 @@ getSessaoAuxiliarByNumero numeroDaInterface tituloDoFilme (x:xs) = do
   else getSessaoAuxiliarByNumero numeroDaInterface tituloDoFilme xs
 
 diminueCapacidadeSessao:: Int -> Int -> IO()
-diminueCapacidadeSessao numIngressosComprados idSessao = do 
-  print "\n"
+diminueCapacidadeSessao numIngressosComprados idSessao = do putStr ""
 
 getIdPrimeiraSessao :: Compra -> Maybe Int
 getIdPrimeiraSessao compra =

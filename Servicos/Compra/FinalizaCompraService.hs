@@ -8,6 +8,7 @@ import Data.Char
 import Control.Concurrent (threadDelay)
 import Servicos.Compra.CompraController (adicionaCompraJSON)
 import Servicos.Sessao.SessaoController
+import Servicos.Sessao.SessaoController
 
 
 finalizaCompraService :: IO() -> Compra -> IO()
@@ -27,9 +28,9 @@ verificaEscolhaUser startMenuCompra compra userChoice
         Nothing -> print "Nada"
         Just id -> diminueCapacidadeSessao (numeroIngressos compra) id
     putStr "Compra Realizada!"
-    threadDelay 2000000
+    threadDelay 1000000
     startMenuCompra
  | userChoice == "C" = do
     putStr "Compra Cancelada!"
-    threadDelay 2000000
+    threadDelay 1000000
     startMenuCompra
